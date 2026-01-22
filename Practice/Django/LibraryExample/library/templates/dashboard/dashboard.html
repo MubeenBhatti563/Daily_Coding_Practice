@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Tour Library{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard__container">
+  <aside class="dashboard__sidebar">
+    <div class="sidebar__profile">
+      <i class="fa-solid fa-circle-user"></i>
+      <p class="sidebar__username">{{ user.username }}</p>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="{% url 'dashboard:student_info' %}" 
+         hx-get="{% url 'dashboard:student_info' %}"
+         hx-target=".dashboard__content"
+         hx-swap="innerHTML"
+         class="sidebar__link active">
+        <i class="fa-solid fa-user"></i>
+        Student Information
+      </a>
+      
+      <a href="{% url 'dashboard:statistics' %}"
+         hx-get="{% url 'dashboard:statistics' %}"
+         hx-target=".dashboard__content"
+         hx-swap="innerHTML"
+         class="sidebar__link">
+        <i class="fa-solid fa-chart-bar"></i>
+        Statistics
+      </a>
+      
+      <!-- Add other navigation items similarly -->
+    </nav>
+  </aside>
+
+  <main class="dashboard__content"></main>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

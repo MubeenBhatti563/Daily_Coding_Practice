@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - Tour Library{% endblock %}
+
+{% block content %}
+<div style='min-height: 70vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(44, 2, 116, 1), rgba(103, 4, 251, 1)); padding: 1rem;'>
+    <form method='post' style='background: white; padding: 2rem; border-radius: 10px; max-width: 400px; width: 100%;'>
+        {% csrf_token %}
+        <h2 style='text-align: center; margin-bottom: 1.5rem;'>Register for Tour Library</h2>
+        
+        {% if form.non_field_errors %}
+        <div style='background: #f8d7da; border: 1px solid #f5c6cb; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'>
+            {% for error in form.non_field_errors %}
+                <p style='color: #721c24; margin: 0.25rem 0;'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Email Field -->
+        <div style='margin-bottom: 1rem;'>
+            <label style='display: block; margin-bottom: 0.5rem; font-weight: 600;'>Email Address:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <p style='color: #dc3545; font-size: 0.875rem; margin-top: 0.25rem;'>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <!-- Username Field -->
+        <div style='margin-bottom: 1rem;'>
+            <label style='display: block; margin-bottom: 0.5rem; font-weight: 600;'>Username:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                    <p style='color: #dc3545; font-size: 0.875rem; margin-top: 0.25rem;'>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+            <p style='color: #6c757d; font-size: 0.8rem; margin-top: 0.25rem;'>Only letters, numbers, and underscores</p>
+        </div>
+        
+        <!-- Password Field -->
+        <div style='margin-bottom: 1rem;'>
+            <label style='display: block; margin-bottom: 0.5rem; font-weight: 600;'>Password:</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                {% for error in form.password1.errors %}
+                    <p style='color: #dc3545; font-size: 0.875rem; margin-top: 0.25rem;'>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+            <p style='color: #6c757d; font-size: 0.8rem; margin-top: 0.25rem;'>
+                Must contain: uppercase, lowercase, number, special char (!@#`$%^&*)
+            </p>
+        </div>
+        
+        <!-- Confirm Password Field -->
+        <div style='margin-bottom: 1rem;'>
+            <label style='display: block; margin-bottom: 0.5rem; font-weight: 600;'>Confirm Password:</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                    <p style='color: #dc3545; font-size: 0.875rem; margin-top: 0.25rem;'>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <button type='submit' style='width: 100%; padding: 0.75rem; background: #8b3dff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: 600;'>Sign Up</button>
+        
+        <p style='text-align: center; margin-top: 1rem; color: #6c757d;'>
+            Already have an account? <a href='{% url "accounts:login" %}' style='color: #8b3dff; text-decoration: none; font-weight: 600;'>Sign in</a>
+        </p>
+    </form>
+</div>
+{% endblock %}

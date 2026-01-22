@@ -1,0 +1,46 @@
+{% load static %}
+<nav class='navbar'>
+  <div class='navbar__logo'>
+    <a href='{% url "accounts:home" %}' class='navbar__logo-link'>
+      <h2 style='color: white; margin: 0;'>Tour Library</h2>
+    </a>
+  </div>
+
+  <ul class='navbar__menu'>
+    <li class='navbar__item'>
+      <div class='navbar__divider'></div>
+      <a href='{% url "accounts:home" %}' class='navbar__link'>Home</a>
+    </li>
+
+    {% if user.is_authenticated %}
+    <li class='navbar__item'>
+      <div class='navbar__divider'></div>
+      <a href='{% url "dashboard:dashboard" %}' class='navbar__link'>Dashboard</a>
+    </li>
+    <li class='navbar__item'>
+      <div class='navbar__divider'></div>
+      <a href='{% url "accounts:logout" %}' class='navbar__link'>Logout</a>
+    </li>
+    {% else %}
+    <li class='navbar__item'>
+      <div class='navbar__divider'></div>
+      <a href='{% url "accounts:login" %}' class='navbar__link'>Login</a>
+    </li>
+    <li class='navbar__item'>
+      <div class='navbar__divider'></div>
+      <a href='{% url "accounts:register" %}' class='navbar__link'>Register</a>
+    </li>
+    {% endif %}
+  </ul>
+
+  <div class='navbar__actions'>
+    <a href='{% url "accounts:home" %}' class='navbar__search' aria-label='Search'>
+      <i class='fa-solid fa-magnifying-glass'></i>
+    </a>
+    <button class='navbar__hamburger' aria-label='Toggle menu' aria-expanded='false'>
+      <div class='navbar__hamburger-line'></div>
+      <div class='navbar__hamburger-line'></div>
+      <div class='navbar__hamburger-line'></div>
+    </button>
+  </div>
+</nav>

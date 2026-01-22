@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Tour Library{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <form class="form" method="post" hx-post="{% url 'accounts:login' %}" hx-target=".main-content" hx-swap="outerHTML">
+    {% csrf_token %}
+
+    <h1 class="form__title">Login to Tour Library</h1>
+
+    <!-- Error Messages -->
+    {% if form.non_field_errors %}
+    <div class="form__errors" role="alert">
+      {% for error in form.non_field_errors %}
+      <p class="form__error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Username Field -->
+    <div class="form__group">
+      {{ form.username.label_tag }}
+      <div class="form__input-wrapper">
+        {{ form.username }}
+        {% if form.username.errors %}
+        <div class="form__errors" role="alert">
+          {% for error in form.username.errors %}
+          <p class="form__error">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Password Field -->
+    <div class="form__group">
+      {{ form.password.label_tag }}
+      <div class="form__input-wrapper">
+        {{ form.password }}
+        {% if form.password.errors %}
+        <div class="form__errors" role="alert">
+          {% for error in form.password.errors %}
+          <p class="form__error">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="form__button">Sign In</button>
+
+    <!-- Sign Up Link -->
+    <p class="form__link">
+      Don't have an account? <a href="{% url 'accounts:register' %}">Sign up here</a>
+    </p>
+  </form>
+</div>
+{% endblock %}
