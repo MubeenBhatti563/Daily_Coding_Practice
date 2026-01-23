@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import Customer, Student, Employee, Manager
 from .serializers import CustomerSerializer, StudentSerializer, EmployeeSerializer, ManagerSerializer
-
+from .authorization import TokenAuthentication
+from .mixins import StaffEditorPermissionMixin
 # Create your views here.
 # Functions based Views
 @api_view(['GET', 'POST'])
@@ -59,8 +60,11 @@ class StudentView(APIView):
     """
     Student view APIs for Client
     """
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [authentication.SessionAuthentication]
+    # permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    # authentication_classes = [
+    #     authentication.SessionAuthentication,
+    #     TokenAuthentication
+    # ]
 
     def get(self, request, *args, **kwargs):
         student = Student.objects.all()
@@ -101,12 +105,14 @@ class StudentViewSingle(APIView):
         return Response(status=status.HTTP_200_OK)
     
 # Mixins
-class EmployeeView(mixins.CreateModelMixin, mixins.ListModelMixin, generics.GenericAPIView):
+class EmployeeView(
+    StaffEditorPermissionMixin,
+    mixins.CreateModelMixin, 
+    mixins.ListModelMixin, 
+    generics.GenericAPIView
+    ):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-
-    permission_classes = [permissions.DjangoModelPermissions]
-    authentication_classes = [authentication.SessionAuthentication]
 
     def get(self, request, *args, **kwargs):
         return self.list(request)
