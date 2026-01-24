@@ -7,6 +7,14 @@ namespace Program
 {
     internal class Program
     {
+        public static void Add(double num1, double num2)
+        {
+            Console.WriteLine($"{num1} + {num2} = {num1 + num2}");
+        }
+        public static void Substract(double num1, double num2)
+        {
+            Console.WriteLine($"{num1} - {num2} = {num1 - num2}");
+        }
         static void Main(string[] args)
         {
             /*
@@ -86,13 +94,30 @@ namespace Program
 
             animalList.Insert(1, new Animal1() { Name = "Steve" });
             animalList.RemoveAt(1);
-            Console.WriteLine("No of Animals {0}", animalList.Count);
-            foreach (Animal1 a in animalList)
+            // Console.WriteLine("No of Animals {0}", animalList.Count);
+            // foreach (Animal1 a in animalList)
+            // {
+            //     Console.WriteLine(a.Name);
+            // }
+            Arithmetic add, sub, addSub;
+            add = new Arithmetic(Add);
+            sub = new Arithmetic(Substract);
+            addSub = add + sub;
+            Console.WriteLine($"Add {6} & {10}");
+            add(6, 10);
+            Console.WriteLine($"Substract & Add {6} & {4}");
+            addSub(6, 4);
+            doubleIt dbl = x => x * 2;
+            Console.WriteLine($"5 * 2 = {dbl(5)}");
+            List<int> numList1 = new List<int> { 1, 9, 3, 8, 4 };
+            var eventList = numList1.Where(a => a % 2 == 0).ToList();
+            foreach (var l1 in eventList)
             {
-                Console.WriteLine(a.Name);
+                Console.WriteLine(l1);
             }
             #endregion
         }
+        public delegate double doubleIt(double x);
     }
 
     public class Animal1
@@ -106,6 +131,9 @@ namespace Program
             Console.WriteLine($"{dbX} + {dbY} = {dbX + dbY}");
         }
     }
+    #region Delegates
+    public delegate void Arithmetic(double num1, double num2);
+    #endregion
     public class Rectangle
     {
         private int width { get; set; }
