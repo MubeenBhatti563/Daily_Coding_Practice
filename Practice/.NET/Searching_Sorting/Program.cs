@@ -59,7 +59,7 @@ namespace Program
                 Console.WriteLine($"Value {val} found at index {mid}");
         }
         // Selection sort for sorting an array
-        static void SelectionSort(ref int[] arr)
+        static void BubbleSort(ref int[] arr)
         {
             for (int i = 0; i < arr.Length; i++)
             {
@@ -74,15 +74,35 @@ namespace Program
                 }
             }
         }
+        static void SelectionSort(int[] arr)
+        {
+            int minIndex;
+            for (int i = 0; i < arr.Length - 1; i++)
+            {
+                minIndex = i;
+                for (int j = i + 1; j < arr.Length; j++)
+                {
+                    if (arr[j] < arr[minIndex])
+                    {
+                        minIndex = j;
+                    }
+                }
+
+                int temp = arr[minIndex];
+                arr[minIndex] = arr[i];
+                arr[i] = temp;
+            }
+        }
         static void InsertionSort(ref int[] arr)
         {
-            int i; int j;
-            for (i = 0; i < arr.Length; i++)
+            for (int i = 1; i < arr.Length; i++)
             {
                 int temp = arr[i];
-                for (j = i; j > 0 && temp < arr[j - 1]; j--)
+                int j = i;
+                while (j > 0 && temp < arr[j - 1])
                 {
                     arr[j] = arr[j - 1];
+                    j--;
                 }
                 arr[j] = temp;
             }
@@ -92,7 +112,7 @@ namespace Program
             int[] arr1 = { 9, 2, 6, 3, 5, 7, 1 };
             Console.Write("Enter value to search: ");
             int val = Convert.ToInt32(Console.ReadLine());
-            InsertionSort(ref arr1);
+            SelectionSort(arr1);
             Binary(val, arr1);
         }
     }
