@@ -144,6 +144,13 @@ class ManagerView(generics.ListCreateAPIView):
     serializer_class = ManagerSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def perform_create(self, serializer):
+        name = serializer.validated_data.get('name')
+        manage = serializer.validated_data.get('manage')
+        if manage is None:
+            manage = name
+        serializer.save(manage=manage)
+
 class ManagerViewSingle(generics.RetrieveUpdateDestroyAPIView):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
