@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from .models import Customer, Student, Employee, Manager
+from .validators import validate_name, validate_no_hello
+from .models import Customer, Student, Employee, Manager, Product
 
 class CustomerSerializer(serializers.ModelSerializer):
     """
@@ -26,12 +27,35 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = "__all__"
 
+class ProductSerializer(serializers.ModelSerializer):
+    """
+    Docstring for ProductSerializer
+    """
+    url = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = Product
+        fields = [
+            'url',
+            'id',
+            'title',
+            'content',
+            'price',
+        ]
+    def get_url(self, obj):
+        request = self.context.get('request')
+        if request is None:
+            return None
+        return reverse("products", kwargs={'pk': obj.pk}, request=request)
+        # return f"api-auth/product/{obj.pk}/"
+
 class ManagerSerializer(serializers.ModelSerializer):
     """
     Docstring for ManageSeializer
     """
     url = serializers.SerializerMethodField(read_only=True)
     email = serializers.EmailField(write_only=True)
+    name = serializers.CharField(validators=[validate_name, validate_no_hello])
+    # title = serializers.CharField(source='name', read_only=True)
     class Meta:
         model = Manager
         fields = [
@@ -39,6 +63,7 @@ class ManagerSerializer(serializers.ModelSerializer):
             "email",
             "pk",
             "name",
+            # 'title',
             "manage",
             "age"
         ]
