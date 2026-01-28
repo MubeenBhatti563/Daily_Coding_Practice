@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import generics, mixins, status, permissions, authentication
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from .models import Customer, Student, Employee, Manager
-from .serializers import CustomerSerializer, StudentSerializer, EmployeeSerializer, ManagerSerializer
+from .models import Customer, Student, Employee, Manager, Product
+from .serializers import CustomerSerializer, StudentSerializer, EmployeeSerializer, ManagerSerializer, ProductSerializer
 from .authorization import TokenAuthentication
 from .mixins import StaffEditorPermissionMixin
 # Create your views here.
@@ -154,4 +154,25 @@ class ManagerView(generics.ListCreateAPIView):
 class ManagerViewSingle(generics.RetrieveUpdateDestroyAPIView):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
+    lookup_field = 'pk'
+
+class ProductView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def perform_create(self, serializer):
+        title = serializer.context.get("title")
+        content = serializer.context.get("content")
+        if content is None:
+            content = title
+        serializer.save(user=self.request.user, content=content)
+
+    def get_queryset(self, *args, **kwargs):
+        request = self.request
+        print(request.user.is_staff)
+        return super().get_queryset(*args, **kwargs)
+
+class ProductViewRetreive(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     lookup_field = 'pk'
