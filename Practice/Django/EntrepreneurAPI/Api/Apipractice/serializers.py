@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from .related_serializers import UsernameSerializer
 from .validators import validate_name, validate_no_hello
 from .models import Customer, Student, Employee, Manager, Product
 
@@ -27,19 +28,33 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = "__all__"
 
+class UsernameProductInlineSerializer(serializers.Serializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name = 'products',
+        lookup_field = 'pk',
+        read_only = True
+    )
+    title = serializers.CharField(read_only=True)
+
 class ProductSerializer(serializers.ModelSerializer):
     """
     Docstring for ProductSerializer
     """
     url = serializers.SerializerMethodField(read_only=True)
+    # owner = UsernameSerializer(source='user', read_only=True)
+    # username = serializers.SerializerMethodField(read_only=True)
+    # related_products = UsernameProductInlineSerializer(source='user.products.all', read_only=True, many=True)
     class Meta:
         model = Product
         fields = [
+            'user',
+            # 'related_products',
             'url',
             'id',
             'title',
             'content',
             'price',
+            # 'username'
         ]
     def get_url(self, obj):
         request = self.context.get('request')
@@ -74,13 +89,11 @@ class ManagerSerializer(serializers.ModelSerializer):
             return None
         return reverse("manager-detail", kwargs={"pk": obj.pk}, request=request)
     
-    def create(self, validated_data):
+    def create(self, instance, validated_data):
         email = validated_data.pop("email", None)
-        print(validated_data)
-        managaer_instance = Manager.objects.create(**validated_data)
         if email:
             print(f"Sending notification to {email}")
-        return managaer_instance
+        return super().update(instance, validated_data)
     
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
