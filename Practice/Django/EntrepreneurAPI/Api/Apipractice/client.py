@@ -14,6 +14,10 @@ if auth_response.status_code == 200:
     headers = {
         "Authorization": f"Bearer {token}"
     }
-    endpoint = "http://localhost:8000/api-auth/student/"
+    endpoint = "http://localhost:8000/api-auth/product/"
     get_response = requests.get(endpoint, headers=headers)
-    print(get_response.json())
+    data = get_response.json()
+    next_url = data['next']
+    if next_url is not None:
+        get_next = requests.get(next_url, headers=headers)
+    print(data['results'])
