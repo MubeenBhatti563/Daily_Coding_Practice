@@ -161,15 +161,14 @@ class ProductView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
 
     def perform_create(self, serializer):
-        title = serializer.context.get("title")
-        content = serializer.context.get("content")
+        title = serializer.validated_data.get("title")
+        content = serializer.validated_data.get("content")
         if content is None:
             content = title
         serializer.save(user=self.request.user, content=content)
 
     def get_queryset(self, *args, **kwargs):
         request = self.request
-        print(request.user.is_staff)
         return super().get_queryset(*args, **kwargs)
 
 class ProductViewRetreive(generics.RetrieveUpdateDestroyAPIView):
