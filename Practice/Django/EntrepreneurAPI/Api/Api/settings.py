@@ -25,9 +25,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third party Api packages
+    "algoliasearch_django",
+    # Internal Apps
     "Apipractice",
+    # Third party packages
     "rest_framework",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
+
 ]
 
 MIDDLEWARE = [
@@ -117,4 +122,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 5
+}
+
+ALGOLIA = {
+  'APPLICATION_ID': '340TSTKE86',
+  'API_KEY': 'e7b31312ffaf146fce44d30a362504db' # Your Write API Key
 }
