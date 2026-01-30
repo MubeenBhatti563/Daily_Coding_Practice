@@ -7,11 +7,10 @@ namespace Program
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World");
-            SinglyLinkedList<int> list = new SinglyLinkedList<int>();
+            CircularLinkedList<int> list = new CircularLinkedList<int>();
             list.AddFirst(10);
-            list.AddFirst(20);
             list.Print();
-            list.Swap();
+            list.AddFirst(20);
             list.Print();
         }
     }
@@ -179,6 +178,43 @@ namespace Program
                 current = current.Prev;
             }
             Console.WriteLine("null");
+        }
+    }
+    public class CircularLinkedList<T>
+    {
+        public Node<T>? Head { get; set; }
+        public Node<T>? Tail { get; set; }
+        public void AddFirst(T data)
+        {
+            Node<T> newNode = new Node<T>(data);
+            if (Head == null)
+            {
+                Head = newNode;
+                Tail = newNode;
+                newNode.Next = Head;
+            }
+            else
+            {
+                Tail!.Next = newNode;
+                newNode.Next = Head;
+                Tail = newNode;
+            }
+        }
+        public void Print()
+        {
+            Node<T>? current = Head;
+            if (Head == null)
+            {
+                Console.WriteLine("List is empty.");
+                return;
+            }
+            Console.Write("Start -> ");
+            do
+            {
+                Console.Write($"{current!.Data} -> ");
+                current = current.Next;
+            } while (current != Head);
+            Console.WriteLine("(Back to Start)");
         }
     }
 }
