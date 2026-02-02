@@ -175,3 +175,12 @@ class ProductViewRetreive(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+
+from . import algolia_client
+class SearchListView(generics.GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q')
+        if not query:
+            return Response('', status=status.HTTP_400_BAD_REQUEST)
+        results = algolia_client.perform_search(query)
+        return Response(results, status=status.HTTP_200_OK)
