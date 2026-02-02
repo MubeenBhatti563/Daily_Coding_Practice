@@ -13,5 +13,6 @@ urlpatterns = [
     path("manager/", views.ManagerView.as_view()),
     path("manager/<int:pk>/", views.ManagerViewSingle.as_view(), name="manager-detail"),
     path("product/", views.ProductView.as_view()),
-    path("product/<int:pk>/", views.ProductViewRetreive.as_view(), name='products')
+    path("product/<int:pk>/", views.ProductViewRetreive.as_view(), name='products'),
+    path("search/", views.SearchListView.as_view())
 ]
