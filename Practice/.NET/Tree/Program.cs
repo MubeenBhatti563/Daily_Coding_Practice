@@ -13,6 +13,8 @@ namespace Program
             list.Insert(7);
             list.Insert(3);
             list.PrintSorted();
+            list.DeleteValue(5);
+            list.PrintSorted();
         }
     }
     public class TreeNode<T>
@@ -74,6 +76,41 @@ namespace Program
                 else current = current.Right;
             }
             return false;
+        }
+        public void DeleteValue(int val)
+        {
+            Root = DeleteRecursive(Root, val);
+        }
+        private TreeNode<int>? DeleteRecursive(TreeNode<int>? root, int val)
+        {
+            if (root == null) return null;
+            if (val < root.Data)
+            {
+                root.Left = DeleteRecursive(root.Left, val);
+            }
+            else if (val > root.Data)
+            {
+                root.Right = DeleteRecursive(root.Right, val);
+            }
+            else
+            {
+                if (root.Left == null) return root.Right;
+                if (root.Right == null) return root.Left;
+
+                root.Data = MinValue(root.Right);
+                root.Right = DeleteRecursive(root.Right, root.Data);
+            }
+            return root;
+        }
+        private int MinValue(TreeNode<int> node)
+        {
+            int min = node.Data;
+            while (node.Left != null)
+            {
+                min = node.Left.Data;
+                node = node.Left;
+            }
+            return min;
         }
     }
 }
