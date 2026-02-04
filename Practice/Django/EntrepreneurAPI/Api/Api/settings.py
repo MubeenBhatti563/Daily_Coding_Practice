@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # Third party packages
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_simplejwt"
 
 ]
 
@@ -115,7 +116,8 @@ STATIC_URL = "static/"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        "Apipractice.authorization.TokenAuthentication"
+        "Apipractice.authorization.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly"
