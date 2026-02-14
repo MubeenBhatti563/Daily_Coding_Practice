@@ -7,7 +7,7 @@ namespace Program
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World");
-            CircularLinkedList<int> list = new CircularLinkedList<int>();
+            SinglyLinkedList<int> list = new SinglyLinkedList<int>();
             list.AddFirst(10);
             list.Print();
             list.AddFirst(20);
@@ -22,6 +22,38 @@ namespace Program
         {
             Data = data;
             Next = null;
+        }
+    }
+    public class ListNode
+    {
+        public int val;
+        public ListNode next;
+        public ListNode(int val = 0, ListNode next = null)
+        {
+            this.val = val;
+            this.next = next;
+        }
+    }
+    public class Solution
+    {
+        public ListNode? Head { get; set; }
+        public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        {
+            ListNode newList = new ListNode(0);
+            ListNode current = newList;
+            int carry = 0;
+            while (l1 != null || l2 != null || carry != 0)
+            {
+                int val1 = (l1 != null) ? l1.val : 0;
+                int val2 = (l2 != null) ? l2.val : 0;
+                int sum = val1 + val2 + carry;
+                carry = sum / 10;
+                current.next = new ListNode(sum % 10);
+                current = current.next;
+                if (l1 != null) l1 = l1.next;
+                if (l2 != null) l2 = l2.next;
+            }
+            return newList;
         }
     }
     public class SinglyLinkedList<T>
