@@ -5,6 +5,14 @@ GET http://localhost:3000/songs/1
 ###
 
 POST http://localhost:3000/songs
+Content-Type: application/json
+
+{
+    "title": "lasting lover",
+    "artists": ["sigla"],
+    "releaseDate": "2022-09-08",
+    "duration": "02:04"
+}
 
 ###
 PUT http://localhost:3000/songs/1
