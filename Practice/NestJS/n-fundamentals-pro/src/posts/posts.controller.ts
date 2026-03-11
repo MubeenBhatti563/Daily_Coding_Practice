@@ -10,9 +10,12 @@ import {
   Post,
   Put,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import type { Post as InterfacePost } from './interfaces/post.interface';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -33,9 +36,15 @@ export class PostsController {
   }
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(
-    @Body() createPostData: Omit<InterfacePost, 'id' | 'createdAt'>,
-  ): InterfacePost {
+  // @UsePipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     forbidNonWhitelisted: true,
+  //     transform: true,
+  //     disableErrorMessages: false,
+  //   }),
+  // )
+  create(@Body() createPostData: CreatePostDto): InterfacePost {
     return this.postService.createPost(createPostData);
   }
   @Put(':id')
