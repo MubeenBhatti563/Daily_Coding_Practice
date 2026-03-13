@@ -10,52 +10,42 @@ import {
   Post,
   Put,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import type { Post as InterfacePost } from './interfaces/post.interface';
 import { CreatePostDto } from './dto/create-post.dto';
+import { PostEntity } from './entities/post.entity';
+import { UpdatePostDto } from './dto/Update-post.dto';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
   @Get()
-  findAll(@Query('search') search: string): InterfacePost[] {
-    const extractPosts = this.postService.findAll();
-    if (search) {
-      return extractPosts.filter((posts) =>
-        posts.title.toLowerCase().includes(search.toLowerCase()),
-      );
-    }
-    return extractPosts;
+  async findAll(): Promise<PostEntity[]> {
+    return this.postService.findAll();
   }
+
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): InterfacePost {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
     return this.postService.findOne(id);
   }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  // @UsePipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     forbidNonWhitelisted: true,
-  //     transform: true,
-  //     disableErrorMessages: false,
-  //   }),
-  // )
-  create(@Body() createPostData: CreatePostDto): InterfacePost {
+  async create(@Body() createPostData: CreatePostDto): Promise<PostEntity> {
     return this.postService.createPost(createPostData);
   }
+
   @Put(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updatePostData: Partial<Omit<InterfacePost, 'id' | 'createdAt'>>,
-  ): InterfacePost {
+    @Body() updatePostData: UpdatePostDto,
+  ): Promise<PostEntity> {
     return this.postService.updatePost(id, updatePostData);
   }
+
   @Delete(':id')
-  deletePost(@Param('id', ParseIntPipe) id: number): void {
+  async deletePost(@Param('id', ParseIntPipe) id: number): Promise<void> {
     this.postService.deletePost(id);
   }
 }
