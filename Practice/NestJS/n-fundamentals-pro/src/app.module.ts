@@ -8,6 +8,7 @@ import { TestModule } from './test/test.module';
 import { PostsModule } from './posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostEntity } from './posts/entities/post.entity';
+import { UserEntity } from './user/entities/user.entitiy';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { PostEntity } from './posts/entities/post.entity';
       username: 'postgres',
       password: 'ali123',
       database: 'YoutubePosts',
-      entities: [PostEntity],
+      entities: [PostEntity, UserEntity],
       synchronize: true,
     }),
     SongsModule,
