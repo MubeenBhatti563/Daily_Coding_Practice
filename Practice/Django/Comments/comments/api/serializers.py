@@ -3,9 +3,10 @@ from django.contrib.auth.models import User
 from .models import Post, Comment
 
 class PostSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = ['id', 'title', 'content', 'createdAt', 'username']
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
