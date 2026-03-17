@@ -1,58 +1,43 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework import viewsets, permissions
 from .models import Post, Comment
-from .serializers import PostSerializer
+from .serializers import PostSerializer, CommentSerializer
 
-# Create your views here.
-class PostViewSet(viewsets.ViewSet):
+class PostViewSet(viewsets.ModelViewSet):
     """
-    A simple ViewSet for Posts
+    A professional ViewSet for viewing and editing Post instances.
     """
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().select_related('user')
+    serializer_class = PostSerializer
 
-    def list(self, request):
-        queryset = self.queryset
-        serializer = PostSerializer(queryset, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-    
-    def create(self, request):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-    def retrieve(self, request, pk=None):
-        try:
-            post = get_object_or_404(Post, pk=pk)
-            serializer = PostSerializer(post)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    def update(self, request, pk=None):
-        try:
-            post = get_object_or_404(Post, pk=pk)
-            serializer = PostSerializer(post)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
-    def destroy(self, request, pk=None):
-        try:
-            post = get_object_or_404(Post, pk=pk)
-            post.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-    
     def get_permissions(self):
-        if self.action == 'list':
-            self.permission_classes = [IsAuthenticatedOrReadOnly]
-        elif self.action == 'create':
-            self.permission_classes = [IsAuthenticated]
-        return super().get_permissions()
+        """
+        Custom permissions: 
+        - List/Retrieve: Anyone
+        - Create/Update/Delete: Authenticated users only
+        """
+        if self.action in ['list', 'retrieve']:
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        return [permissions.IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        """
+        Automatically link the Post to the logged-in user.
+        """
+        serializer.save(user=self.request.user)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for handling Comment CRUD logic.
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        return [permissions.IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        # Professional practice: Link comment to current user automatically
+        serializer.save(user=self.request.user)
