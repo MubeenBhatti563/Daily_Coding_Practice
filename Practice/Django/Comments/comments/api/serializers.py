@@ -9,10 +9,12 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'content', 'createdAt', 'username']
 
 class CommentSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    postname = serializers.CharField(source='post.title', read_only=True)
     class Meta:
         model = Comment
-        fields = "__all__"
-
+        fields = ['id', 'text', 'createdAt', 'username', 'postname', 'post']
+        extra_kwargs = {'post': {'write_only': True}}
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
