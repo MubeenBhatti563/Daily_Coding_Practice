@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from .models import Post, Comment, Profile
+from .serializers import PostSerializer, CommentSerializer, UserProfileSerializer
 
 class PostViewSet(viewsets.ModelViewSet):
     """
@@ -41,3 +41,15 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Professional practice: Link comment to current user automatically
         serializer.save(user=self.request.user)
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = UserProfileSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retreive']:
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        return [permissions.IsAuthenticated()]
