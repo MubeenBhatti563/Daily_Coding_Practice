@@ -9,6 +9,7 @@ import { UserEntity, UserRole } from 'src/user/entities/user.entitiy';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -76,14 +77,14 @@ export class AuthService {
     };
   }
 
-  async loginUser(registerDto: RegisterDto) {
+  async loginUser(loginDto: LoginDto) {
     const user = await this.userRepository.findOne({
-      where: { email: registerDto.email },
+      where: { email: loginDto.email },
     });
 
     if (
       !user ||
-      !(await this.verifyPassword(registerDto.password, user.password))
+      !(await this.verifyPassword(loginDto.password, user.password))
     ) {
       throw new UnauthorizedException(
         'Invalid credentials or accout not exists',
@@ -111,7 +112,7 @@ export class AuthService {
       refreshToken: this.generateRefreshToken(user),
     };
   }
-  private async refreshToken(refreshToken: string) {
+  async refreshToken(refreshToken: string) {
     try {
       const payload = this.jwtService.verify(refreshToken, {
         secret: 'refresh_secret',
@@ -150,5 +151,17 @@ export class AuthService {
       secret: 'refresh_secret',
       expiresIn: '2d',
     });
+  }
+
+  async getUserById(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found!');
+    }
+    const { password, ...result } = user;
+    return result;
   }
 }
