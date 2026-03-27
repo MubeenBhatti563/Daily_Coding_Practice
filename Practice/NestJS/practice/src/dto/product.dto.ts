@@ -6,7 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class ProdcutDto {
+export class ProductDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(15, { message: 'Not exceed 15 characters' })
@@ -15,7 +15,7 @@ export class ProdcutDto {
 
   @IsNotEmpty()
   @IsInt()
-  quanity: number;
+  quantity: number;
 
   @IsInt()
   @IsNotEmpty()
