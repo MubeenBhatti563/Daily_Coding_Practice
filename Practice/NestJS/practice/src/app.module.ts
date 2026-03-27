@@ -11,6 +11,7 @@ import { ProductEntity } from './entities/product.entity';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    TypeOrmModule.forFeature([ProductEntity]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
