@@ -36,4 +36,32 @@ export class AppService {
     });
     return this.productRepository.save(product);
   }
+
+  async updateProduct(
+    id: number,
+    productDto: ProductDto,
+  ): Promise<ProductEntity> {
+    await this.productRepository.update(
+      { id },
+      {
+        name: productDto.name,
+        quantity: productDto.quantity,
+        sales: productDto.sales,
+        price: productDto.price,
+        description: productDto.description,
+      },
+    );
+    const updatedProduct = await this.productRepository.findOneBy({ id });
+    if (!updatedProduct)
+      throw new NotFoundException(`Product with id ${id} is not found!`);
+    return updatedProduct;
+  }
+
+  async deleteProduct(id: number): Promise<void> {
+    const item = await this.productRepository.findOneBy({ id });
+    if (!item) {
+      throw new NotFoundException(`Product with id ${id} is not found!`);
+    }
+    await this.productRepository.delete(item);
+  }
 }
