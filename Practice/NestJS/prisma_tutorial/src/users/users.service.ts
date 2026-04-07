@@ -12,13 +12,25 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getUsers() {
-    return this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany({
+      include: { userSetting: true },
+    });
+    console.log('Users with settings:', JSON.stringify(users, null, 2));
+    return users;
   }
 
   async createUser(dto: UserDto) {
     try {
       return await this.prisma.user.create({
-        data: dto,
+        data: {
+          ...dto,
+          userSetting: {
+            create: {
+              smsEnabled: true,
+              notificationsOn: false,
+            },
+          },
+        },
       });
     } catch (error) {
       if (
