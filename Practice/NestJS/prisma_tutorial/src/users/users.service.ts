@@ -5,7 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { UserDto } from './users.dto';
+import { UserDto } from './dtos/users.dto';
+import { UpdateUserSettingDto } from './dtos/updateusersetting.dto';
 
 @Injectable()
 export class UsersService {
@@ -46,6 +47,14 @@ export class UsersService {
   async getUserById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
+      include: {
+        userSetting: {
+          select: {
+            smsEnabled: true,
+            notificationsOn: true,
+          },
+        },
+      },
     });
 
     if (!user) throw new NotFoundException('User not found');
@@ -74,5 +83,16 @@ export class UsersService {
   async deleteUser(id: number) {
     await this.getUserById(id);
     await this.prisma.user.delete({ where: { id } });
+  }
+
+  async updateUserSetting(
+    id: number,
+    updateUserSettingDto: UpdateUserSettingDto,
+  ) {
+    await this.getUserById(id);
+    return this.prisma.userSetting.update({
+      where: { id },
+      data: updateUserSettingDto,
+    });
   }
 }

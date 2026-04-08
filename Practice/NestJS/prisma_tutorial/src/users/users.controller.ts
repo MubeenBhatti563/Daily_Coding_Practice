@@ -11,7 +11,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserDto } from './users.dto';
+import { UserDto } from './dtos/users.dto';
+import { UpdateUserSettingDto } from './dtos/updateusersetting.dto';
 
 @Controller('users')
 export class UsersController {
@@ -48,5 +49,14 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     await this.userService.deleteUser(id);
+  }
+
+  @Patch(':id/settings')
+  @HttpCode(HttpStatus.OK)
+  async updateUserSetting(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserSettingDto: UpdateUserSettingDto,
+  ) {
+    return this.userService.updateUserSetting(id, updateUserSettingDto);
   }
 }
