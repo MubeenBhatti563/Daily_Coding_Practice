@@ -17,7 +17,6 @@ namespace Program
         }
         static void Main(string[] args)
         {
-            /*
             Rectangle r1 = new Rectangle(10, 10);
             r1.Formula();
             Animal a1 = new Pig("Piggy");
@@ -26,7 +25,7 @@ namespace Program
             foreach (Animal a in a2)
             {
                 a.animalSound();
-            } */
+            }
             // IElectronicDevice TV = TVRemote.GetDevice();
             // PowerButton powBut = new PowerButton(TV);
             // powBut.Execuate();
